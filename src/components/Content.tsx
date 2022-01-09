@@ -1,4 +1,6 @@
-import { MovieCard } from "./MovieCard";
+import { memo } from 'react';
+
+import { MovieCard } from './MovieCard';
 
 interface ContentProps {
   selectedGenre: {
@@ -19,20 +21,32 @@ interface ContentProps {
   }>;
 }
 
-export function Content({ selectedGenre, movies }: ContentProps) {
+function ContentItem({ selectedGenre, movies }: ContentProps) {
   return (
     <div className="container">
       <header>
-        <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
+        <span className="category">
+          Categoria:<span> {selectedGenre.title}</span>
+        </span>
       </header>
 
       <main>
         <div className="movies-list">
           {movies.map(movie => (
-            <MovieCard key={movie.imdbID} title={movie.Title} poster={movie.Poster} runtime={movie.Runtime} rating={movie.Ratings[0].Value} />
+            <MovieCard
+              key={movie.imdbID}
+              title={movie.Title}
+              poster={movie.Poster}
+              runtime={movie.Runtime}
+              rating={movie.Ratings[0].Value}
+            />
           ))}
         </div>
       </main>
     </div>
-  )
+  );
 }
+
+export const Content = memo(ContentItem, (prevProps, nextProps) => {
+  return Object.is(prevProps.movies, nextProps.movies);
+});
